@@ -89,14 +89,18 @@ for code in postcodes:
 # x axis: years
 # y axis: average taxable income
 # line graph (average taxable income) vs (median taxable income)
+plt.figure('Taxable income with common postcodes', figsize=(7, 6))
+plt.title('Average and Median Taxable Income Over Time')
+plt.suptitle("Taxable income with common postcodes", y=0.965, fontweight="bold", fontsize=16)
+plt.text(0.5, 0.95, '(based on business locations)', ha='center', fontsize=12)
+
 plt.plot(list(average_tax.keys()), list(average_tax.values()), label='Average Taxable Income')
 plt.plot(list(median_tax.keys()), list(median_tax.values()), label='Median Taxable Income')
+
 plt.xlabel('Year')
 plt.ylabel('Taxable Income')
-plt.title('Average and Median Taxable Income Over Time')
+
 plt.legend()
-
-
 
 # ### Showing/saving the plot ###
 print("showing plot...")

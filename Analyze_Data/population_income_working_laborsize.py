@@ -49,12 +49,20 @@ for code in postcodes:
 # income 2021 vs 2011
 # working age population 2021 vs 2011
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
+fig.canvas.set_window_title('Census with common postcodes')
+fig.suptitle("Census with common postcodes", y=0.965, fontweight="bold", fontsize=16)
+fig.text(0.5, 0.91, '(based on business locations)', ha='center', fontsize=12)
+fig.set_figheight(7)
+fig.set_figwidth(7)
+
 ax1.bar(['2011', '2021'], [data_2011['population'], data_2021['population']])
 ax1.set_title('Population')
 ax2.bar(['2011', '2021'], [data_2011['income'], data_2021['income']])
 ax2.set_title('Income')
 ax3.bar(['2011', '2021'], [data_2011['working_age_population'], data_2021['working_age_population']])
 ax3.set_title('Working Age Population')
+
+plt.subplots_adjust(hspace=0.5, top=0.85)
 
 ### Showing/saving the plot ###
 print("showing plot...")

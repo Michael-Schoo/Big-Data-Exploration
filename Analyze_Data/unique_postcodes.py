@@ -42,13 +42,17 @@ sizes = [x[1] for x in sorted_postcodes]
 explode = [0.1 for i in range(len(postcodes))]
 # only "explode" the 2nd slice (i.e. 'Hogs')
 
-fig1, ax1 = plt.subplots()
-ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
-        shadow=True, startangle=90)
-ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+# fig1, ax1 = plt.subplots()
+plt.figure('Unique Postcodes (with more than 500 ABNs)', figsize=(8, 7))
+# plt.title('Unique Postcodes (with more than 500 ABNs)')
+plt.suptitle("Unique Postcodes (with more than 500 ABNs)", y=0.965, fontweight="bold", fontsize=16)
 
-plt.title('Unique Postcodes (with more than 500 ABNs)')
 plt.text(0, -1.5, f'Total number of unique postcodes shown: {len(postcodes)}/{postcodes_amount}')
+
+plt.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
+        shadow=True, startangle=90)
+plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
 
 ### Showing/saving the plot ###
 print("showing plot...")
