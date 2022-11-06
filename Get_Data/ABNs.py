@@ -1,11 +1,9 @@
 import csv
 import sys
 import xmltodict
-import pprint
-import json
-# time start
 import time
 
+# The columns of the csv file
 csv_columns = [
     'ABN',
     'ABNStatusFromDate',
@@ -18,40 +16,41 @@ csv_columns = [
     'GSTStatus',
     'GSTStatusFromDate'
 ]
-def csv_to_dict(xml_file, csv_file):
 
+# The function that is used to convert the xsv to a csv
+def xml_to_csv(xml_file, csv_file):
+
+    # Open the xml file 
     with open(sys.path[0]+xml_file) as fd:
+        # Read file, and show how long it took
         read = fd.read()
         print("Read file")
         read_time = time.time()
+
+        # Parse the xml
         doc = xmltodict.parse(read)
         parse_time = time.time()
 
         print("Parsed file in ", parse_time-read_time, " seconds")
 
-    # save to csv
-    # csv_columns = list_of_dicts[0].keys()
+    # Make a csv file with a similar name
     with open(csv_file, 'w', newline='') as csvfile:
+        # Delete contents of file
         csvfile.truncate(0)
         writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
         writer.writeheader()
-        # writer.writerows(list_of_dicts)
 
-        # save
-        # list_of_dicts = []
-        a,b = 0,0
+        # Save each row
+        amount_of_entries, kept_entries = 0,0
         for data in doc['Transfer']['ABR']:
-            # print(data)
-            # print(i)
-            a+=1
-            if (not data.get('MainEntity')):
-                # print("No MainEntity")
-                continue
-            if (not data.get('ASICNumber')):
-                # print("No ASICNumber")
-                continue
-            b+=1
 
+            amount_of_entries+=1
+            # Check that the MainEntity and ASICNumber is still in data
+            if (not data.get('MainEntity')): continue
+            if (not data.get('ASICNumber')): continue
+            kept_entries+=1
+
+            # Make the dict that is used for csv
             new_dict = {
                 "ABN": data['ABN']['#text'],
                 "ABNStatusFromDate": data['ABN']['@ABNStatusFromDate'],
@@ -65,15 +64,13 @@ def csv_to_dict(xml_file, csv_file):
                 "GSTStatusFromDate": data['GST']['@GSTStatusFromDate'],
             }
             
-            # break
-            # list_of_dicts.append(new_dict)
+            # Write the row
             writer.writerow(new_dict)
-        print(f"{b}/{a}")
+        
+        # Print the amount of entries that were kept
+        print(f"{kept_entries}/{amount_of_entries}")
         csv_time = time.time()
         print("Saved to csv in ", csv_time-parse_time, " seconds")
-        # json.dump(list_of_dicts, file)
-
-        print("saved")
 
 xml_files = [
     './data/public_split_1_10/20221102_Public01.xml',
@@ -99,26 +96,31 @@ xml_files = [
 ]
 
 def main():
+    # Ask wether the file should really be run
     print("note: this file takes a while to run (for my computer it was ~30mins)")
     if input("Are you sure you want to run this? (y/n): ") != "y":
         return
 
-    csv_files = [xml_file.replace('.xml', '.csv') for xml_file in xml_files]
+    # Convert the xml to the new csv file
     for xml_file in xml_files:
+        # Make the csv name by replacing the xml with csv
         csv_file = xml_file.replace('.xml', '.csv')
-        csv_to_dict(xml_file, csv_file)
+        xml_to_csv(xml_file, csv_file)
     
+    # Read the many csv files and add it to data
     data = []
+    csv_files = [xml_file.replace('.xml', '.csv') for xml_file in xml_files]
     for csv_file in csv_files:
-        # open csv file
+        # Open csv file
         with open(csv_file, 'r') as csvfile:
             reader = csv.DictReader(csvfile)
-            for row in reader:
-                data.append(row)
-    print(data[0])
+            # Add each row to data
+            for row in reader: data.append(row)
+
+    # Print size of data (amount of entries)
     print(len(data))
 
-    # save data to csv
+    # Save data to csv
     with open('../Clean_and_Reduce_Data/data/ABNs.csv', 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
         writer.writeheader()

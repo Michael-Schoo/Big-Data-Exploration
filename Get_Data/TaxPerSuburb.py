@@ -1,9 +1,11 @@
 import csv
 import pandas as pd
+
+# Open the excel file
 df = pd.read_excel('./data/ts20individual08medianaveragetaxableincomestateterritorypostcode.xlsx', sheet_name='Table 8')
 data = df.to_csv()
 
-# remove first 27 lines from data
+# Remove first 27 lines from data
 data = data.split('\n', 27)[27]
 
 csv_columns = [
@@ -62,20 +64,27 @@ csv_columns = [
     'average_taxable_income_2019-20',
 ]
 
+# Open the file that will be used to export data
 with open('../Clean_and_Reduce_Data/data/TaxPerSuburb.csv', 'w', newline='') as csvfile:
+    # Export writer
     writer = csv.writer(csvfile)
     writer.writerow(csv_columns)
+
+    # Go through every line of excel exported
     for row in data.split('\n'):
+        # Split it by ','
         add = row.split(",")
+        
+        # Remove first entry
         add.pop(0)
+
+        # If there isn't anything, then  don't add
         if not len(add): continue
 
+        # Go through each entry, anr replace things that don't need to exist
         new_row = []
-        for i in add:
-            i=i.replace('\\r', '').replace('\r', '').replace('na', '')
-            new_row.append(i)
+        for i in add: 
+            new_row.append(i.replace('\\r', '').replace('\r', '').replace('na', ''))
 
+        # Write the row
         writer.writerow(new_row)
-
-
-    
