@@ -8,6 +8,7 @@ import time
 
 csv_columns = [
     'ABN',
+    'ABNStatusFromDate',
     'EntityTypeText',
     'EntityTypeInd',
     'NonIndividualName',
@@ -17,7 +18,8 @@ csv_columns = [
     'GSTStatus',
     'GSTStatusFromDate'
 ]
-def xsv_to_dict(xml_file, csv_file):
+def csv_to_dict(xml_file, csv_file):
+
     with open(sys.path[0]+xml_file) as fd:
         read = fd.read()
         print("Read file")
@@ -49,9 +51,10 @@ def xsv_to_dict(xml_file, csv_file):
                 # print("No ASICNumber")
                 continue
             b+=1
-            
+
             new_dict = {
                 "ABN": data['ABN']['#text'],
+                "ABNStatusFromDate": data['ABN']['@ABNStatusFromDate'],
                 "EntityTypeText": data['EntityType']['EntityTypeText'],
                 "EntityTypeInd": data['EntityType']['EntityTypeInd'],
                 "NonIndividualName": data['MainEntity']['NonIndividualName']['NonIndividualNameText'],
@@ -61,6 +64,7 @@ def xsv_to_dict(xml_file, csv_file):
                 "GSTStatus": data['GST']['@status'],
                 "GSTStatusFromDate": data['GST']['@GSTStatusFromDate'],
             }
+            
             # break
             # list_of_dicts.append(new_dict)
             writer.writerow(new_dict)
@@ -72,33 +76,37 @@ def xsv_to_dict(xml_file, csv_file):
         print("saved")
 
 xml_files = [
-    './data/public_split_1_10/20221026_Public01.xml',
-    './data/public_split_1_10/20221026_Public02.xml',
-    './data/public_split_1_10/20221026_Public03.xml',
-    './data/public_split_1_10/20221026_Public04.xml',
-    './data/public_split_1_10/20221026_Public05.xml',
-    './data/public_split_1_10/20221026_Public06.xml',
-    './data/public_split_1_10/20221026_Public07.xml',
-    './data/public_split_1_10/20221026_Public08.xml',
-    './data/public_split_1_10/20221026_Public09.xml',
-    './data/public_split_1_10/20221026_Public10.xml',
-    './data/public_split_11_20/20221026_Public11.xml',
-    './data/public_split_11_20/20221026_Public12.xml',
-    './data/public_split_11_20/20221026_Public13.xml',
-    './data/public_split_11_20/20221026_Public14.xml',
-    './data/public_split_11_20/20221026_Public15.xml',
-    './data/public_split_11_20/20221026_Public16.xml',
-    './data/public_split_11_20/20221026_Public17.xml',
-    './data/public_split_11_20/20221026_Public18.xml',
-    './data/public_split_11_20/20221026_Public19.xml',
-    './data/public_split_11_20/20221026_Public20.xml',
+    './data/public_split_1_10/20221102_Public01.xml',
+    './data/public_split_1_10/20221102_Public02.xml',
+    './data/public_split_1_10/20221102_Public03.xml',
+    './data/public_split_1_10/20221102_Public04.xml',
+    './data/public_split_1_10/20221102_Public05.xml',
+    './data/public_split_1_10/20221102_Public06.xml',
+    './data/public_split_1_10/20221102_Public07.xml',
+    './data/public_split_1_10/20221102_Public08.xml',
+    './data/public_split_1_10/20221102_Public09.xml',
+    './data/public_split_1_10/20221102_Public10.xml',
+    './data/public_split_11_20/20221102_Public11.xml',
+    './data/public_split_11_20/20221102_Public12.xml',
+    './data/public_split_11_20/20221102_Public13.xml',
+    './data/public_split_11_20/20221102_Public14.xml',
+    './data/public_split_11_20/20221102_Public15.xml',
+    './data/public_split_11_20/20221102_Public16.xml',
+    './data/public_split_11_20/20221102_Public17.xml',
+    './data/public_split_11_20/20221102_Public18.xml',
+    './data/public_split_11_20/20221102_Public19.xml',
+    './data/public_split_11_20/20221102_Public20.xml',
 ]
 
 def main():
+    print("note: this file takes a while to run (for my computer it was ~30mins)")
+    if input("Are you sure you want to run this? (y/n): ") != "y":
+        return
+
     csv_files = [xml_file.replace('.xml', '.csv') for xml_file in xml_files]
     for xml_file in xml_files:
         csv_file = xml_file.replace('.xml', '.csv')
-        xsv_to_dict(xml_file, csv_file)
+        csv_to_dict(xml_file, csv_file)
     
     data = []
     for csv_file in csv_files:

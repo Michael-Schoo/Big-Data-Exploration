@@ -15,14 +15,20 @@ with open('./data/ABNs.csv', 'r') as csvfile:
 
     # remove rows with no state
     # filter(lambda row: row['AddressState'] != '', data)
+    start_time = time.time()
     data = [data for data in data if data['AddressState'] != '']
 
-    for row in data:
-        if row['AddressState'] == '':
-            print(";(")
+    # aaa = 0
+    # for row in data:
+    #     if row['AddressState'] == '':
+    #         data.remove(row)
+        # elif (row['GSTStatusFromDate'] == '19000101'):
+        #     data.remove(row)
+        #     aaa +=1
+        #     if (aaa % 100_000): print("removed")
 
+    print(len(data))
     # reduce it by 5%
-    start_time = time.time()
     data = data[::20]
     print("Reduced data in ", time.time()-start_time, " seconds")
     print(len(data))
